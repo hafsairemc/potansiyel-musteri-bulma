@@ -1,0 +1,1402 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Pusula — Yapay zekâ destekli dış ticaret istihbarat platformu. Ürününüzü satın alabilecek firmaları dünya genelinde tarayın."
+    />
+    <title>Pusula — Dış Ticaret İstihbarat Platformu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="pusula.css?v=2.5" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Sliding Consent Banner -->
+      <div
+        id="consentBanner"
+        class="consent-banner-fixed"
+        style="display: none"
+      >
+        <div style="display: flex; gap: 16px; align-items: flex-start">
+          <div class="consent-icon" style="margin-bottom: 0; flex-shrink: 0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 22s7-7.1 7-12.5A7 7 0 0 0 5 9.5C5 14.9 12 22 12 22Z"
+                stroke="#96692a"
+                stroke-width="1.6"
+              />
+              <circle
+                cx="12"
+                cy="9.5"
+                r="2.4"
+                stroke="#96692a"
+                stroke-width="1.6"
+              />
+            </svg>
+          </div>
+          <div style="flex: 1">
+            <h1 style="font-size: 16px; margin-bottom: 4px">
+              Size daha iyi hizmet verebilmemiz için konum bilginizi paylaşır
+              mısınız?
+            </h1>
+            <p
+              class="lede"
+              style="
+                margin-bottom: 12px;
+                font-size: 13px;
+                color: var(--ink-soft);
+                line-height: 1.5;
+              "
+            >
+              Bu bilgi yalnızca hangi ülkeden bize ulaşıldığını anlamamıza
+              yardımcı olur.
+            </p>
+            <div
+              class="consent-actions"
+              style="
+                margin-top: 0;
+                justify-content: flex-start;
+                max-width: 300px;
+                display: flex;
+                gap: 10px;
+              "
+            >
+              <button
+                class="btn btn-accent"
+                style="padding: 8px 14px; font-size: 13px"
+                id="consentYes"
+              >
+                Evet, Paylaş
+              </button>
+              <button
+                class="btn btn-ghost"
+                style="padding: 8px 14px; font-size: 13px"
+                id="consentNo"
+              >
+                Hayır, Teşekkürler
+              </button>
+            </div>
+            <p
+              class="consent-status"
+              id="consentStatus"
+              style="
+                text-align: left;
+                margin-top: 8px;
+                font-size: 12px;
+                min-height: 16px;
+              "
+            ></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ TOPBAR (hidden on login) ============ -->
+      <div class="topbar" id="topbar" style="display: none">
+        <div class="brand">
+          <svg
+            class="mark"
+            width="26"
+            height="26"
+            viewBox="0 0 26 26"
+            fill="none"
+          >
+            <circle
+              cx="13"
+              cy="13"
+              r="11.5"
+              stroke="#12233d"
+              stroke-width="1.3"
+            />
+            <path
+              d="M13 3.5 L15.6 11 L23 13 L15.6 15 L13 22.5 L10.4 15 L3 13 L10.4 11 Z"
+              fill="#b8863a"
+            />
+          </svg>
+          <span class="brand-name">Pusula<span class="b-dot">.</span></span>
+        </div>
+        <div class="steps" id="steps">
+          <div class="step" data-step="1"><span class="num">1</span>Giriş</div>
+          <div class="step-sep"></div>
+          <div class="step" data-step="2">
+            <span class="num">2</span>Ürün Bilgileri
+          </div>
+          <div class="step-sep"></div>
+          <div class="step" data-step="3">
+            <span class="num">3</span>Sonuçlar
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="user-chip">
+            <span class="user-dot" id="userInitials">—</span
+            ><span id="userCompany">—</span>
+          </div>
+          <a class="logout-link" href="#" id="logoutLink">Çıkış</a>
+        </div>
+      </div>
+
+      <!-- ============ PAGE 1 — LOGIN ============ -->
+      <div class="page visible" id="page-login">
+        <div class="login-split">
+          <div class="login-left">
+            <div class="login-left-top">
+              <div class="brand">
+                <svg
+                  class="mark"
+                  width="30"
+                  height="30"
+                  viewBox="0 0 26 26"
+                  fill="none"
+                >
+                  <circle
+                    cx="13"
+                    cy="13"
+                    r="11.5"
+                    stroke="#12233d"
+                    stroke-width="1.3"
+                  />
+                  <path
+                    d="M13 3.5 L15.6 11 L23 13 L15.6 15 L13 22.5 L10.4 15 L3 13 L10.4 11 Z"
+                    fill="#b8863a"
+                  />
+                </svg>
+                <span class="brand-name"
+                  >Pusula<span class="b-dot">.</span></span
+                >
+              </div>
+              <h2 class="login-headline">
+                Ürününüzü kimin, hangi ülkede aradığını <em>biz bulalım.</em>
+              </h2>
+              <p class="login-sub">
+                Yapay zekâ destekli dış ticaret istihbaratı: ürününüzü satın
+                alabilecek firmaları, dünyanın her noktasında, tek panelden
+                tarayın.
+              </p>
+            </div>
+            <svg
+              class="route-art"
+              width="380"
+              height="260"
+              viewBox="0 0 380 260"
+              fill="none"
+            >
+              <path
+                d="M20 210 C 90 150, 140 190, 190 130 S 300 60, 360 40"
+                stroke="#e4e7ec"
+                stroke-width="1.4"
+                stroke-dasharray="3 6"
+              />
+              <path
+                d="M20 210 C 70 190, 110 150, 190 130"
+                stroke="#b8863a"
+                stroke-width="1.4"
+                stroke-dasharray="3 6"
+              />
+              <circle cx="20" cy="210" r="4.5" fill="#12233d" />
+              <circle cx="190" cy="130" r="3.5" fill="#b8863a" />
+              <circle cx="300" cy="60" r="3.5" fill="#9aa3b0" />
+              <circle cx="360" cy="40" r="3.5" fill="#9aa3b0" />
+              <circle cx="120" cy="170" r="3" fill="#9aa3b0" />
+            </svg>
+            <div class="login-left-bottom">
+              Modül 01 · Ziyaretçi Tespiti &nbsp;·&nbsp; Modül 02 · Potansiyel
+              Alıcı Taraması &nbsp;·&nbsp; Modül 03 · Harita İstihbaratı
+            </div>
+          </div>
+
+          <div class="login-right">
+            <!-- Login form -->
+            <div class="auth-card" id="loginCard">
+              <h1>Hoş geldiniz</h1>
+              <p class="lede">
+                Devam etmek için hesap bilgilerinizle giriş yapın.
+              </p>
+              <form id="loginForm">
+                <div class="field">
+                  <label for="loginUsername">Kullanıcı Adı</label>
+                  <input
+                    id="loginUsername"
+                    type="text"
+                    placeholder="firma.kullanici"
+                    autocomplete="username"
+                  />
+                </div>
+                <div class="field">
+                  <label for="loginPassword">Şifre</label>
+                  <input
+                    id="loginPassword"
+                    type="password"
+                    placeholder="••••••••"
+                    autocomplete="current-password"
+                  />
+                </div>
+                <button class="btn btn-primary" type="submit" id="loginButton">
+                  Giriş Yap
+                </button>
+              </form>
+              <div class="auth-divider"><span>veya</span></div>
+              <button
+                class="btn btn-google"
+                type="button"
+                id="googleLoginButton"
+                disabled
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill="#4285F4"
+                    d="M17.64 9.205c0-.638-.057-1.252-.164-1.841H9v3.482h4.844a4.14 4.14 0 0 1-1.797 2.715v2.258h2.909c1.702-1.567 2.684-3.875 2.684-6.614Z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M9 18c2.43 0 4.468-.806 5.956-2.181l-2.909-2.258c-.806.54-1.835.859-3.047.859-2.344 0-4.328-1.585-5.037-3.714H.956v2.332A9 9 0 0 0 9 18Z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M3.963 10.706A5.41 5.41 0 0 1 3.682 9c0-.592.102-1.168.281-1.706V4.962H.956A9 9 0 0 0 0 9c0 1.452.347 2.827.956 4.038l3.007-2.332Z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M9 3.58c1.321 0 2.507.454 3.441 1.346l2.581-2.581C13.464.892 11.426 0 9 0A9 9 0 0 0 .956 4.962l3.007 2.332C4.672 5.165 6.656 3.58 9 3.58Z"
+                  />
+                </svg>
+                Google ile devam et
+              </button>
+              <p class="auth-error" id="loginError"></p>
+              <p class="auth-foot">
+                Yöneticiniz tarafından oluşturulan Supabase hesabınızla giriş
+                yapın.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ MODÜL PANELİ ============ -->
+      <div class="page" id="page-dashboard">
+        <div class="page-shell module-shell">
+          <div class="page-head">
+            <div class="page-eyebrow">Pusula Modülleri</div>
+            <h1>Dış ticaret çalışma alanınız</h1>
+            <p>Bir modül seçin; tüm sonuçlar hesabınıza özel saklanır.</p>
+          </div>
+          <section class="capability-panel" id="capabilityPanel" hidden>
+            <div>
+              <strong id="capabilityTitle"
+                >Servis durumu kontrol ediliyor</strong
+              ><small id="capabilitySummary"></small>
+            </div>
+            <div class="capability-list" id="capabilityList"></div>
+          </section>
+          <button
+            class="btn btn-primary dashboard-customer"
+            data-module="customer"
+          >
+            Potansiyel Müşteri Aramasına Git →
+          </button>
+          <div class="module-grid">
+            <button class="module-card" data-module="assistant">
+              <span class="module-icon">✦</span
+              ><strong>AI Yardım Asistanı</strong
+              ><small>Uygulamayı sorun ve hesap sonuçlarınızı özetleyin</small>
+            </button>
+            <button class="module-card" data-module="rfq">
+              <span class="module-icon">◎</span
+              ><strong>B2B Talep / RFQ Avı</strong
+              ><small>Açık satın alma taleplerini bulun</small>
+            </button>
+            <button class="module-card" data-module="fair">
+              <span class="module-icon">▦</span
+              ><strong>Fuar Katılımcı Analizi</strong
+              ><small>XLSX/CSV listenizi ürün uyumuna göre puanlayın</small>
+            </button>
+            <button class="module-card" data-module="learning">
+              <span class="module-icon">▶</span
+              ><strong>Dış Ticaret Eğitimi</strong
+              ><small>Kısa dersleri tamamlayıp ilerlemenizi kaydedin</small>
+            </button>
+            <button class="module-card" data-module="email">
+              <span class="module-icon">✉</span
+              ><strong>İhracat Tanıtım E-postası</strong
+              ><small
+                >Müşterilere kişiselleştirilmiş tanıtım ve teklif e-postası gönderin</small
+              >
+            </button>
+            <button class="module-card" data-module="demand">
+              <span class="module-icon">↗</span><strong>Talep Yayınlama</strong
+              ><small
+                >Satın alma talebini platformlara onaylı biçimde aktarın</small
+              >
+            </button>
+            <button class="module-card" data-module="plan">
+              <span class="module-icon">◇</span><strong>Plan ve Kullanım</strong
+              ><small>Aylık arama hakkınızı ve açık modülleri görün</small>
+            </button>
+            <button class="module-card" data-module="trade">
+              <span class="module-icon">▥</span><strong>Ticaret Verisi</strong
+              ><small
+                >GTİP ve ülkeye göre resmî ithalat değerini inceleyin</small
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-modules">
+        <div class="page-shell module-shell">
+          <button class="module-back btn btn-ghost" id="moduleBackBtn">
+            ← Modüllere Dön
+          </button>
+          <section class="module-workspace" id="rfqModule" hidden>
+            <div class="page-head">
+              <div class="page-eyebrow">RFQ Avı</div>
+              <h1>Açık satın alma taleplerini bulun</h1>
+              <p>Yalnız açık ve indekslenmiş sayfalar taranır.</p>
+            </div>
+            <div class="card module-form">
+              <div class="field">
+                <label>Ürün Adı</label
+                ><input id="rfqProduct" type="text" placeholder="Örn. Fren Balatası" />
+              </div>
+              <div class="field">
+                <label>Hedef Ülke</label
+                ><input id="rfqCountry" value="Türkiye" />
+              </div>
+              <div class="field">
+                <label>En Eski Talep Tarihi</label
+                ><input id="rfqDateFrom" type="date" />
+              </div>
+              <button class="btn btn-accent" id="rfqStart">
+                RFQ Taramasını Başlat
+              </button>
+            </div>
+            <div class="module-status" id="rfqStatus"></div>
+            <div class="module-results" id="rfqResults"></div>
+            <button class="btn btn-primary" id="rfqExport" hidden>
+              RFQ Excel İndir
+            </button>
+          </section>
+          <section class="module-workspace" id="fairModule" hidden>
+            <div class="page-head">
+              <div class="page-eyebrow">Fuar Analizi</div>
+              <h1>Katılımcı listesini puanlayın</h1>
+              <p>
+                XLSX/CSV yükleyin veya firma adlarını ve websitelerini doğrudan
+                yapıştırın.
+              </p>
+            </div>
+            <div class="card module-form">
+              <div class="field">
+                <label>Ürün Adı</label
+                ><input id="fairProduct" type="text" placeholder="Örn. Egzoz Takozu" />
+              </div>
+              <div class="field">
+                <label>Katılımcı Dosyası</label
+                ><input id="fairFile" type="file" accept=".xlsx,.csv" />
+              </div>
+              <button class="btn btn-accent" id="fairUpload">
+                Dosyayı Yükle
+              </button>
+              <div class="field fair-list-field">
+                <label>Açık Katılımcı Sayfası</label
+                ><input
+                  id="fairSourceUrl"
+                  type="url"
+                  placeholder="https://fuar.example/exhibitors"
+                /><small
+                  >Yalnız açık sayfalar taranır; CAPTCHA veya giriş koruması
+                  aşılmaz.</small
+                >
+              </div>
+              <button class="btn btn-ghost" id="fairUrlImport">
+                Sayfadan Katılımcıları Al
+              </button>
+              <div class="field fair-list-field">
+                <label>Firma Adları veya Websiteleri</label
+                ><textarea
+                  id="fairEntries"
+                  rows="6"
+                  placeholder="ABC Otomotiv | https://abc.com&#10;https://ornekfirma.com&#10;XYZ Yedek Parça"
+                ></textarea
+                ><small
+                  >Her satıra bir firma yazın. İsterseniz firma adı ile
+                  websiteyi | işaretiyle ayırın.</small
+                >
+              </div>
+              <button class="btn btn-ghost" id="fairListImport">
+                Yapıştırılan Listeyi Kullan
+              </button>
+              <div id="fairMapping" hidden>
+                <div class="grid-3">
+                  <div class="field">
+                    <label>Firma Adı Sütunu</label
+                    ><select id="fairCompanyColumn"></select>
+                  </div>
+                  <div class="field">
+                    <label>Website</label
+                    ><select id="fairWebsiteColumn"></select>
+                  </div>
+                  <div class="field">
+                    <label>Ülke</label
+                    ><select id="fairCountryColumn"></select>
+                  </div>
+                  <div class="field">
+                    <label>Şehir</label
+                    ><select id="fairCityColumn"></select>
+                  </div>
+                  <div class="field">
+                    <label>Sektör</label
+                    ><select id="fairSectorColumn"></select>
+                  </div>
+                  <div class="field">
+                    <label>Açıklama</label
+                    ><select id="fairDescriptionColumn"></select>
+                  </div>
+                  <div class="field">
+                    <label>E-posta</label
+                    ><select id="fairEmailColumn"></select>
+                  </div>
+                  <div class="field">
+                    <label>Telefon</label
+                    ><select id="fairPhoneColumn"></select>
+                  </div>
+                </div>
+                <button class="btn btn-primary" id="fairStart">
+                  Analizi Başlat
+                </button>
+              </div>
+            </div>
+            <div class="module-status" id="fairStatus"></div>
+            <div class="module-results" id="fairResults"></div>
+            <button class="btn btn-primary" id="fairExport" hidden>
+              Fuar Analizini Excel İndir
+            </button>
+          </section>
+          <section class="module-workspace" id="learningModule" hidden>
+            <div class="page-head">
+              <div class="page-eyebrow">Eğitim</div>
+              <h1>Dış ticaret çalışma rehberi</h1>
+              <p>
+                Kısa dersleri tamamladıkça ilerlemeniz hesabınıza kaydedilir.
+              </p>
+            </div>
+            <div class="module-results" id="learningResults"></div>
+          </section>
+          <section class="module-workspace" id="emailModule" hidden>
+            <div class="page-head">
+              <div class="page-eyebrow">İhracat Tanıtım E-postası</div>
+              <h1>Müşterilere tanıtım & teklif e-postası gönderin</h1>
+              <p>
+                Gönderim önce taslak olarak kaydedilir. Açık onay vermeden
+                hiçbir e-posta gönderilmez.
+              </p>
+            </div>
+            <div class="card module-form">
+              <div class="field">
+                <label>Tanıtım Başlığı</label
+                ><input
+                  id="emailCampaignName"
+                  placeholder="Örn. Almanya distribütörleri"
+                />
+              </div>
+              <div class="field">
+                <label>E-posta Konusu</label
+                ><input
+                  id="emailCampaignSubject"
+                  placeholder="Örn. İş birliği ve ürün tanıtımı"
+                />
+              </div>
+              <div class="field">
+                <label>Mesaj</label
+                ><textarea
+                  id="emailCampaignBody"
+                  rows="7"
+                  placeholder="Merhaba {{name}}, {{company}} firmanız için..."
+                ></textarea>
+              </div>
+              <div class="field">
+                <label>Alıcılar</label
+                ><textarea
+                  id="emailCampaignRecipients"
+                  rows="5"
+                  placeholder="eposta@firma.com, Ad Soyad, Firma Adı"
+                ></textarea
+                ><small>Her satıra bir alıcı yazın. En fazla 50 alıcı.</small>
+              </div>
+              <button class="btn btn-accent" id="emailCampaignCreate">
+                Tanıtım Taslağı Oluştur
+              </button>
+            </div>
+            <div class="module-status" id="emailCampaignStatus"></div>
+            <div class="module-results" id="emailCampaignResults"></div>
+          </section>
+          <section class="module-workspace" id="demandModule" hidden>
+            <div class="page-head">
+              <div class="page-eyebrow">Talep Yayınlama</div>
+              <h1>B2B talep taslağı hazırlayın</h1>
+              <p>
+                Entegrasyon bulunan platformlar otomatik işlenir; giriş gereken
+                platformlarda güvenli yönlendirme gösterilir.
+              </p>
+            </div>
+            <div class="card" style="padding: 24px;">
+              <div class="grid-2" style="align-items: start; gap: 24px;">
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                  <div class="field" style="margin: 0;">
+                    <label>Ürün Adı</label
+                    ><input id="demandProduct" type="text" placeholder="Örn. Endüstriyel Vana" />
+                  </div>
+                  <div class="grid-3" style="gap: 12px;">
+                    <div class="field" style="margin: 0;">
+                      <label>Miktar</label
+                      ><input id="demandQuantity" placeholder="Örn. 10.000 adet" />
+                    </div>
+                    <div class="field" style="margin: 0;">
+                      <label>Hedef Ülke</label
+                      ><input id="demandCountry" value="Türkiye" />
+                    </div>
+                    <div class="field" style="margin: 0;">
+                      <label>Son Tarih</label
+                      ><input id="demandDeadline" type="date" />
+                    </div>
+                  </div>
+                  <div style="display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" id="demandDraft" type="button" style="flex: 1; min-width: 140px;">
+                      Taslak Olarak Kaydet
+                    </button>
+                    <button class="btn btn-accent" id="demandApprove" type="button" style="flex: 1; min-width: 140px;">
+                      Onayla ve Yayınla
+                    </button>
+                  </div>
+                </div>
+                <div class="field" style="margin: 0; display: flex; flex-direction: column;">
+                  <label style="margin-bottom: 8px;">Platformlar</label>
+                  <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                    <label class="chip" style="width: 100%; border-radius: 8px; padding: 11px 16px; font-weight: 500;">
+                      <input type="checkbox" name="demandPlatform" value="TurkishExporter" checked /> TurkishExporter
+                    </label>
+                    <label class="chip" style="width: 100%; border-radius: 8px; padding: 11px 16px; font-weight: 500;">
+                      <input type="checkbox" name="demandPlatform" value="Europages" checked /> Europages
+                    </label>
+                    <label class="chip" style="width: 100%; border-radius: 8px; padding: 11px 16px; font-weight: 500;">
+                      <input type="checkbox" name="demandPlatform" value="TradeKey" checked /> TradeKey
+                    </label>
+                    <label class="chip" style="width: 100%; border-radius: 8px; padding: 11px 16px; font-weight: 500;">
+                      <input type="checkbox" name="demandPlatform" value="ECPlaza" /> ECPlaza
+                    </label>
+                    <label class="chip" style="width: 100%; border-radius: 8px; padding: 11px 16px; font-weight: 500;">
+                      <input type="checkbox" name="demandPlatform" value="eWorldTrade" /> eWorldTrade
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="module-status" id="demandStatus"></div>
+            <div class="module-results" id="demandResults"></div>
+          </section>
+          <section class="module-workspace" id="planModule" hidden>
+            <div class="page-head">
+              <div class="page-eyebrow">Hesabım</div>
+              <h1>Plan ve kullanım bilgileri</h1>
+              <p>
+                Bu ay kullanılan arama sayısını, kalan hakkı ve plan
+                seçeneklerini inceleyin.
+              </p>
+            </div>
+            <div class="module-status" id="planUsage"></div>
+            <div class="module-grid" id="planCards"></div>
+          </section>
+          <section class="module-workspace" id="tradeModule" hidden>
+            <div class="page-head">
+              <div class="page-eyebrow">UN Comtrade</div>
+              <h1>Hedef pazar ithalat sinyali</h1>
+              <p>
+                Ürünün GTİP koduna göre Birleşmiş Milletler tarafından
+                yayımlanan yıllık ithalat değerini inceleyin.
+              </p>
+            </div>
+            <div class="card module-form">
+              <div class="field">
+                <label>Ürün Adı veya GTİP Kodu</label
+                ><input id="tradeProduct" type="text" placeholder="Örn. Fren Balatası veya 8708.30" />
+              </div>
+              <div class="field">
+                <label>Hedef Ülke</label
+                ><input id="tradeCountry" value="Türkiye" />
+              </div>
+              <div class="field">
+                <label>Yıl</label
+                ><input
+                  id="tradeYear"
+                  type="number"
+                  min="1962"
+                  max="2100"
+                  placeholder="Boş bırakılırsa son dönem"
+                />
+              </div>
+              <button class="btn btn-accent" id="tradeAnalyze">
+                Ticaret Verisini Getir
+              </button>
+            </div>
+            <div class="module-status" id="tradeStatus"></div>
+            <div class="module-results" id="tradeResults"></div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ============ PAGE 2 — ÜRÜN BİLGİLERİ FORMU ============ -->
+      <div class="page" id="page-form">
+        <div class="page-shell">
+          <button class="module-back btn btn-ghost" id="formBackBtn" type="button" style="margin-bottom: 20px;">
+            ← Adım 1'e Dön
+          </button>
+          <div class="page-head">
+            <div class="page-eyebrow">Adım 2 · Ürün Bilgileri</div>
+            <h1>Aradığınız müşteriyi tarif edin</h1>
+            <p>
+              Aşağıdaki bilgiler ne kadar net olursa, tarama motorumuz o kadar
+              isabetli sonuç getirir. Bilmediğiniz alanları boş
+              bırakabilirsiniz.
+            </p>
+          </div>
+
+          <form id="productForm">
+            <!-- 1. Ürün -->
+            <div class="card">
+              <div class="card-head">
+                <span class="idx">01</span>
+                <h3>Ürün Bilgileri</h3>
+              </div>
+              <div class="grid-3">
+                <div class="field">
+                  <label for="oemInput"
+                    >OEM Numarası
+                    <span style="text-transform: none; font-weight: 400"
+                      >(opsiyonel)</span
+                    ></label
+                  >
+                  <input
+                    class="mono"
+                    id="oemInput"
+                    type="text"
+                    placeholder="Örn. 04465-06070"
+                  />
+                </div>
+                <div class="field">
+                  <label for="hsCode"
+                    >Ürün Kodu (GTİP)
+                    <span style="text-transform: none; font-weight: 400"
+                      >(opsiyonel)</span
+                    ></label
+                  >
+                  <input
+                    class="mono"
+                    id="hsCode"
+                    type="text"
+                    placeholder="8708.30"
+                  />
+                </div>
+                <div class="field">
+                  <label for="productNameInput">Ürün Adı</label>
+                  <input
+                    id="productNameInput"
+                    type="text"
+                    placeholder="Örn. Fren Balatası"
+                    required
+                  />
+                </div>
+              </div>
+              <details class="translation-fields">
+                <summary>Ürünün yabancı dil karşılıklarını ekle</summary>
+                <div class="grid-3">
+                  <div class="field">
+                    <label for="productNameEn">İngilizce</label
+                    ><input
+                      id="productNameEn"
+                      placeholder="English product name"
+                    />
+                  </div>
+                  <div class="field">
+                    <label for="productNameDe">Almanca</label
+                    ><input
+                      id="productNameDe"
+                      placeholder="Deutscher Produktname"
+                    />
+                  </div>
+                  <div class="field">
+                    <label for="productNameFr">Fransızca</label
+                    ><input id="productNameFr" placeholder="Nom français" />
+                  </div>
+                  <div class="field">
+                    <label for="productNameEs">İspanyolca</label
+                    ><input
+                      id="productNameEs"
+                      placeholder="Nombre en español"
+                    />
+                  </div>
+                  <div class="field">
+                    <label for="productNameRu">Rusça</label
+                    ><input
+                      id="productNameRu"
+                      placeholder="Название на русском"
+                    />
+                  </div>
+                  <div class="field">
+                    <label for="productNameAr">Arapça</label
+                    ><input
+                      id="productNameAr"
+                      dir="rtl"
+                      placeholder="اسم المنتج بالعربية"
+                    />
+                  </div>
+                </div>
+              </details>
+              <div class="translation-actions">
+                <button
+                  class="btn btn-ghost"
+                  id="suggestTranslationsBtn"
+                  type="button"
+                >
+                  Teknik Terim Öner
+                </button>
+                <span id="translationSuggestionStatus"></span>
+              </div>
+              <div
+                class="card translation-suggestion"
+                id="translationSuggestionPanel"
+                hidden
+              >
+                <h3>Teknik terim önerisi</h3>
+                <p id="translationSuggestionText"></p>
+                <div id="translationEvidence"></div>
+                <p>
+                  <small
+                    >Bu terimler otomatik öneridir. Kaynakları kontrol edip
+                    onaylamadan ürün kaydına aktarılmaz.</small
+                  >
+                </p>
+                <button
+                  class="btn btn-primary"
+                  id="applyTranslationsBtn"
+                  type="button"
+                >
+                  Önerileri Forma Aktar
+                </button>
+              </div>
+              <div class="field">
+                <label for="productDescription"
+                  >Ürün Açıklaması
+                  <span
+                    style="
+                      text-transform: none;
+                      font-weight: 400;
+                      color: var(--ink-faint);
+                    "
+                    >(opsiyonel)</span
+                  ></label
+                >
+                <textarea
+                  id="productDescription"
+                  rows="2"
+                  placeholder="Ürünün teknik özellikleri, kullanım alanı vb."
+                ></textarea>
+              </div>
+              <div class="field" style="margin-bottom: 0">
+                <label
+                  >Ürün Görseli ile Arama
+                  <span
+                    style="
+                      text-transform: none;
+                      font-weight: 400;
+                      color: var(--ink-faint);
+                    "
+                    >(opsiyonel)</span
+                  ></label
+                >
+                <div class="upload-box" id="uploadBox">
+                  <div style="font-size: 20px; margin-bottom: 6px">＋</div>
+                  Ürün görselini sürükleyin veya seçmek için tıklayın
+                  <input
+                    type="file"
+                    id="productImages"
+                    accept="image/*"
+                    multiple
+                  />
+                </div>
+                <div class="upload-preview" id="uploadPreview"></div>
+                <label class="consent-check"
+                  ><input type="checkbox" id="reverseImageSearch" /> Google Lens
+                  ile benzer ürün sayfalarını ara
+                  <small>(isteğe bağlı, Serper kredisi kullanır)</small></label
+                >
+              </div>
+            </div>
+
+            <!-- 2. Hedef Pazar -->
+            <div class="card">
+              <div class="card-head">
+                <span class="idx">02</span>
+                <h3>Hedef Pazar</h3>
+              </div>
+              <div class="card-hint">
+                Taranacak ülkeleri seçin. Dil seçimi, ürün adının o dildeki
+                karşılığıyla aranmasını sağlar.
+              </div>
+              <div class="field">
+                <label>Hedef Ülkeler</label>
+                <div class="chip-group" id="countryChips">
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Türkiye"
+                      checked
+                    />Türkiye</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Almanya"
+                    />Almanya</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="ABD"
+                    />ABD</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Birleşik Krallık"
+                    />Birleşik Krallık</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="BAE"
+                    />BAE</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Polonya"
+                    />Polonya</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Rusya"
+                    />Rusya</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Bulgaristan"
+                    />Bulgaristan</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Gürcistan"
+                    />Gürcistan</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Azerbaycan"
+                    />Azerbaycan</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Fransa"
+                    />Fransa</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="İspanya"
+                    />İspanya</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="İtalya"
+                    />İtalya</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Suudi Arabistan"
+                    />Suudi Arabistan</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Mısır"
+                    />Mısır</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Hindistan"
+                    />Hindistan</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Çin"
+                    />Çin</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="country"
+                      value="Japonya"
+                    />Japonya</label
+                  >
+                  <label
+                    class="chip"
+                    id="selectAllCountries"
+                    style="font-weight: 600"
+                    ><input type="checkbox" />+ Tüm Ülkeler</label
+                  >
+                </div>
+              </div>
+              <div class="field" style="margin-bottom: 0">
+                <label>Arama Dilleri</label>
+                <div class="chip-group" id="languageChips">
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="İngilizce"
+                      checked
+                    />İngilizce</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="Almanca"
+                    />Almanca</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="Rusça"
+                    />Rusça</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="Bulgarca"
+                    />Bulgarca</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="Gürcüce"
+                    />Gürcüce</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="Azerice"
+                    />Azerice</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="Arapça"
+                    />Arapça</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="Fransızca"
+                    />Fransızca</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="İspanyolca"
+                    />İspanyolca</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="İtalyanca"
+                    />İtalyanca</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="Japonca"
+                    />Japonca</label
+                  >
+                  <label class="chip"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="Çince"
+                    />Çince</label
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Sektör Eşleştirme -->
+            <div class="card">
+              <div class="card-head">
+                <span class="idx">03</span>
+                <h3>Sektör Eşleştirme</h3>
+              </div>
+              <div class="card-hint">
+                Ana sektörünüzün yanı sıra, ürününüzü ikinci elden de
+                satabilecek yan sektörleri ekleyin. Örn. oto yedek parçası satan
+                bir firma çoğu zaman hırdavat da satar.
+              </div>
+              <div class="grid-2">
+                <div class="field">
+                  <label for="mainSector">Ana Sektör</label>
+                  <input
+                    id="mainSector"
+                    type="text"
+                    placeholder="Örn. Otomotiv Yedek Parça"
+                  />
+                </div>
+                <div class="field" style="margin-bottom: 0">
+                  <label>Yan / Bağlı Sektörler</label>
+                  <div class="tag-input" id="subSectorsInput">
+                    <input
+                      type="text"
+                      placeholder="Sektör ekle, Enter'a bas"
+                      id="subSectorText"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div id="classificationPanel" class="classification-panel" hidden>
+                <div class="classification-label">
+                  Önerilen arama kategorisi
+                </div>
+                <div class="classification-path" id="classificationPath">—</div>
+                <div
+                  class="classification-aliases"
+                  id="classificationAliases"
+                ></div>
+                <div class="classification-actions">
+                  <button
+                    type="button"
+                    class="btn btn-ghost"
+                    id="confirmClassificationBtn"
+                  >
+                    Kategoriyi Onayla
+                  </button>
+                  <span id="classificationStatus"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Rakip Bilgisi -->
+            <div class="card">
+              <div class="card-head">
+                <span class="idx">04</span>
+                <h3>Rakip Bilgisi</h3>
+              </div>
+              <div class="card-hint">
+                Rakip firmalarınızı belirtirseniz, bu markaları arayan/satan
+                firmalar da potansiyel müşteri olarak taranır.
+              </div>
+              <div class="field" style="margin-bottom: 0">
+                <label>Rakip Firmalar</label>
+                <div class="tag-input" id="competitorsInput">
+                  <input
+                    type="text"
+                    placeholder="Rakip firma ekle, Enter'a bas"
+                    id="competitorText"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. Arama Kaynakları -->
+            <div class="card">
+              <div class="card-head">
+                <span class="idx">05</span>
+                <h3>Arama Kaynakları</h3>
+              </div>
+              <div class="card-hint">
+                Hangi kaynaklardan tarama yapılacağını seçin.
+              </div>
+              <div class="source-row">
+                <div class="source-name">
+                  Google Arama Motoru
+                  <span class="source-tag">Serper web sonuçları</span>
+                </div>
+                <label class="switch"
+                  ><input type="checkbox" id="srcGoogleWeb" checked /><span
+                    class="track"
+                    ><span class="knob"></span></span
+                ></label>
+              </div>
+              <div class="source-row">
+                <div class="source-name">
+                  Yandex Arama Motoru
+                  <span class="source-tag" id="srcYandexStatus"
+                    >Yapılandırma kontrol ediliyor</span
+                  >
+                </div>
+                <label class="switch"
+                  ><input type="checkbox" id="srcYandexWeb" disabled /><span
+                    class="track"
+                    ><span class="knob"></span></span
+                ></label>
+              </div>
+              <div class="source-row">
+                <div class="source-name">
+                  Google Haritalar
+                  <span class="source-tag">Web sitesi olmayan firmalar</span>
+                </div>
+                <label class="switch"
+                  ><input type="checkbox" id="srcGoogleMaps" checked /><span
+                    class="track"
+                    ><span class="knob"></span></span
+                ></label>
+              </div>
+              <div class="source-row">
+                <div class="source-name">
+                  B2B Platformları
+                  <span class="source-tag"
+                    >Tradekey, Europages, IndiaMART…</span
+                  >
+                </div>
+                <label class="switch"
+                  ><input type="checkbox" id="srcB2B" checked /><span
+                    class="track"
+                    ><span class="knob"></span></span
+                ></label>
+              </div>
+              <div class="source-row">
+                <div class="source-name">
+                  Fuar Katılımcı Listesi
+                  <span class="source-tag">Excel / link yükleyin</span>
+                </div>
+                <label class="switch"
+                  ><input type="checkbox" id="srcFair" disabled /><span
+                    class="track"
+                    ><span class="knob"></span></span
+                ></label>
+              </div>
+            </div>
+
+            <div class="form-footer" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <button class="btn btn-secondary" type="button" id="formBackFooterBtn">
+                ← Adım 1'e Dön
+              </button>
+              <div style="display: flex; gap: 12px;">
+                <button class="btn btn-ghost" type="button" id="saveDraftBtn">
+                  Taslak Olarak Kaydet
+                </button>
+                <button class="btn btn-accent" type="submit" id="searchBtn">
+                  Potansiyel Müşterileri Bul →
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ============ PAGE 3 — SONUÇLAR ============ -->
+      <div class="page" id="page-results">
+        <div class="results-shell">
+          <div class="page-head">
+            <div class="page-eyebrow">Adım 3 · Sonuçlar</div>
+            <h1 id="resultsTitle">Potansiyel Alıcılar</h1>
+            <p id="resultsSummary"></p>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat">
+              <div class="val" id="statTotal">—</div>
+              <div class="lbl">Bulunan Firma / Site</div>
+            </div>
+            <div class="stat">
+              <div class="val" id="statCountries">—</div>
+              <div class="lbl">Taranan Ülke</div>
+            </div>
+            <div class="stat">
+              <div class="val accent" id="statEmails">—</div>
+              <div class="lbl">Kamusal Kaynakta Bulunan E-posta</div>
+            </div>
+            <div class="stat">
+              <div class="val" id="statSubSector">—</div>
+              <div class="lbl">Yan Sektörden Eşleşme</div>
+            </div>
+          </div>
+
+          <!-- Yeni Firma Arama Çubuğu -->
+          <div class="directory-search-container">
+            <div class="ds-row ds-row-top">
+              <input
+                type="text"
+                placeholder="Firma, ürün veya anahtar kelime yazın..."
+                id="searchInput"
+              />
+            </div>
+            <div class="ds-row ds-row-bottom">
+              <div class="ds-selects">
+                <select id="filterMatch">
+                  <option value="">Tüm Sektörler</option>
+                  <option value="main">Ana Sektör</option>
+                  <option value="sub">Yan Sektör</option>
+                </select>
+                <select id="filterCountry">
+                  <option value="">Tüm Ülkeler (İhracat)</option>
+                </select>
+                <select id="filterSource">
+                  <option value="">Tüm Kaynaklar</option>
+                  <option value="google_web">Google Web</option>
+                  <option value="yandex_web">Yandex Web</option>
+                  <option value="google_maps">Google Haritalar</option>
+                  <option value="b2b_platform">B2B Platformu</option>
+                </select>
+                <select id="filterPlatform">
+                  <option value="">Tüm Platformlar</option>
+                </select>
+              </div>
+              <div class="ds-actions">
+                <button class="btn btn-green" id="directorySearchBtn">
+                  ARA
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="margin-left: 4px"
+                  >
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </button>
+                <a href="#" class="ds-link" id="resetSearchLink"
+                  >Tüm Firmalar</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="directory-results-meta">
+            <span id="resultsCount">Arama sonucunda 0 adet firma bulundu.</span>
+            <div class="pagination-controls">
+              <button class="btn btn-ghost" id="resultsPrev" type="button">
+                ←</button
+              ><span class="pagination-text" id="resultsPagination"
+                >Sayfa 1/1</span
+              ><button class="btn btn-ghost" id="resultsNext" type="button">
+                →
+              </button>
+            </div>
+          </div>
+
+          <!-- Yeni Kartlı Liste Yapısı -->
+          <div class="results-grid" id="resultsBody">
+            <!-- JS tarafından doldurulacak -->
+          </div>
+
+          <div class="results-footer">
+            <div class="left" id="resultsCountFooter"></div>
+            <div class="actions">
+              <button class="btn btn-ghost" id="newSearchBtn">
+                Yeni Arama
+              </button>
+              <button class="btn btn-accent" id="exportBtn">
+                Excel Olarak İndir
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading overlay -->
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">Tarama yapılıyor…</div>
+      </div>
+
+      <button
+        class="assistant-launcher"
+        id="assistantLauncher"
+        aria-label="Pusula asistanını aç"
+      >
+        ✦
+      </button>
+      <aside class="assistant-panel" id="assistantPanel" aria-hidden="true">
+        <div class="assistant-head">
+          <div>
+            <strong>Pusula Asistanı</strong
+            ><small id="assistantMode">Yardım modu</small>
+          </div>
+          <button id="assistantClose">×</button>
+        </div>
+        <div class="assistant-messages" id="assistantMessages">
+          <div class="assistant-message bot">
+            Merhaba! Arama, RFQ, yetkili kişi ve fuar analizi konusunda yardımcı
+            olabilirim.
+          </div>
+        </div>
+        <form class="assistant-compose" id="assistantForm">
+          <input
+            id="assistantInput"
+            maxlength="1500"
+            placeholder="Bir soru sorun…"
+          /><button class="btn btn-accent">Gönder</button>
+        </form>
+      </aside>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="pusula.js?v=4.0"></script>
+  </body>
+</html>
